@@ -1,15 +1,31 @@
 const User = require("../models/User");
 
-// Create a new user (existing)
+// Create a new user
 exports.createUser = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, description, profileurl, skills, friends, isPremiumUser } = req.body;
 
     if (!name || !email) {
       return res.status(400).json({ message: "Name and email are required" });
     }
 
-    const user = await User.create({ name, email });
+    // Determine if profile is complete
+    const isProfileComplete =
+      description && description.trim() !== "" &&
+      profileurl && profileurl.trim() !== "" &&
+      Array.isArray(skills) && skills.length > 0;
+
+    const user = await User.create({
+      name,
+      email,
+      description: description || "",
+      profileurl: profileurl || "",
+      skills: skills || [],
+      friends: friends || [],
+      isProfileComplete,
+      isPremiumUser: isPremiumUser || false
+    });
+
     console.log("User created:", user);
     res.status(201).json(user);
   } catch (error) {
@@ -18,7 +34,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Fetch all users (new)
+// Fetch all users
 exports.getUsers = async (req, res) => {
   try {
     const users = await User.find(); // Fetch all documents
