@@ -18,6 +18,8 @@ app.use("/api/users", require("./routes/userRoutes"));
 // Auth route
 app.use("/api/auth", require("./routes/authRoutes"));
 
+// Friend request route
+app.use("/api/friends", require("./routes/friendRoutes"));
 
 
 module.exports = app;

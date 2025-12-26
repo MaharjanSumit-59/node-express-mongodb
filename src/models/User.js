@@ -12,12 +12,19 @@ const friendSchema = new mongoose.Schema({
   email: { type: String }
 });
 
+const friendRequestSchema = new mongoose.Schema({
+  from: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  status: { type: String, enum: ["pending", "accepted", "rejected"], default: "pending" },
+  createdAt: { type: Date, default: Date.now }
+});
+
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   profileurl: { type: String, required: true },
   skills: { type: [skillSchema], required: true },
   friends: { type: [friendSchema], default: [] },
+  friendRequests: { type: [friendRequestSchema], default: [] },
   email: { type: String, required: true, unique: true },
   isProfileComplete: { type: Boolean, default: false },
   isPremiumUser: { type: Boolean, default: false }
